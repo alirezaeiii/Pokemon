@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="pokemonItem"
+            type="se.appshack.android.refactoring.domain.Pokemon" />
+
+        <variable
+            name="callback"
+            type="se.appshack.android.refactoring.ui.MainAdapter.OnClickListener" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:onClick="@{() -> callback.onClick(pokemonItem)}"
+        android:orientation="horizontal"
+        android:padding="@dimen/spacing_medium">
+
+        <TextView
+            android:id="@+id/pokemon_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/number(pokemonItem.id)}" />
+
+        <TextView
+            android:id="@+id/pokemon_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:layout_marginLeft="@dimen/spacing_medium"
+            android:text="@{pokemonItem.name}" />
+
+    </LinearLayout>
+
+</layout>

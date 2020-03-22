@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.DetailFragment">
+
+    <data>
+
+        <variable
+            name="pokemon"
+            type="se.appshack.android.refactoring.domain.Pokemon" />
+
+        <variable
+            name="pokemon_details"
+            type="se.appshack.android.refactoring.network.PokemonDetailsResponse" />
+
+        <variable
+            name="vm"
+            type="se.appshack.android.refactoring.viewmodels.DetailViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/ToolbarStyle" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:showData="@{vm.liveData}"
+                app:showDataDetail="@{vm.genus}">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/spacing_xlarge"
+                    android:padding="@dimen/spacing_medium">
+
+                    <ImageView
+                        android:id="@+id/imageFront"
+                        style="@style/DetailImageView"
+                        app:imageUrl="@{pokemon_details.sprites.urlFront}"
+                        app:layout_constraintEnd_toStartOf="@id/imageBack"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+
+                    <ImageView
+                        android:id="@+id/imageBack"
+                        style="@style/DetailImageView"
+                        app:imageUrl="@{pokemon_details.sprites.urlBack}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/imageFront"
+                        app:layout_constraintTop_toTopOf="@id/imageFront"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/pokemon_info"
+                        style="@style/DetailTextView"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@id/guideline"
+                        app:layout_constraintStart_toStartOf="@id/guideline"
+                        app:layout_constraintTop_toBottomOf="@id/imageFront"
+                        app:showText="@{@string/pokemon_info(pokemon.id, pokemon.name)}" />
+
+                    <TextView
+                        android:id="@+id/pokemonSpecies"
+                        style="@style/DetailTextView"
+                        app:layout_constraintEnd_toEndOf="@id/guideline"
+                        app:layout_constraintStart_toStartOf="@id/guideline"
+                        app:layout_constraintTop_toBottomOf="@id/pokemon_info" />
+
+                    <TextView
+                        android:id="@+id/pokemonTypes"
+                        style="@style/DetailTextView"
+                        app:layout_constraintEnd_toEndOf="@id/guideline"
+                        app:layout_constraintStart_toStartOf="@id/guideline"
+                        app:layout_constraintTop_toBottomOf="@id/pokemonSpecies"
+                        app:showText="@{@string/types(vm.types)}" />
+
+
+                    <TextView
+                        android:id="@+id/pokemonHeight"
+                        style="@style/DetailTextView"
+                        app:layout_constraintEnd_toEndOf="@id/guideline"
+                        app:layout_constraintStart_toStartOf="@id/guideline"
+                        app:layout_constraintTop_toBottomOf="@id/pokemonTypes"
+                        app:showText="@{@string/height(pokemon_details.height)}" />
+
+                    <TextView
+                        android:id="@+id/pokemonWeight"
+                        style="@style/DetailTextView"
+                        app:layout_constraintEnd_toEndOf="@id/guideline"
+                        app:layout_constraintStart_toStartOf="@id/guideline"
+                        app:layout_constraintTop_toBottomOf="@id/pokemonHeight"
+                        app:showText="@{@string/weight(pokemon_details.weight)}" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.5" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+            <ProgressBar
+                style="@style/LoadingStyle"
+                app:showLoading="@{vm.liveData}"
+                app:showLoadingDetail="@{vm.genus}" />
+
+            <LinearLayout
+                android:id="@+id/error_view"
+                style="@style/ErrorViewStyle"
+                app:showError="@{vm.liveData}"
+                app:showErrorDetail="@{vm.genus}">
+
+                <TextView style="@style/ErrorTextViewStyle" />
+
+                <Button
+                    android:id="@+id/retry_btn"
+                    style="@style/ErrorButtonStyle" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</layout>

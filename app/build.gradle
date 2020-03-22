@@ -1,0 +1,107 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'androidx.navigation.safeargs.kotlin'
+
+androidExtensions {
+    experimental = true
+}
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "se.appshack.android.refactoring"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        buildConfigField "String", "POKEMON_BASE_URL", "\"https://pokeapi.co/api/v2/\""
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Support libraries
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
+    implementation "androidx.appcompat:appcompat:$version_support"
+    implementation "androidx.core:core-ktx:$version_core"
+    implementation "com.google.android.material:material:$version_material"
+    implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
+    implementation "androidx.test.espresso:espresso-idling-resource:$version_espresso"
+
+    // Navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:$version_navigation"
+
+    // Architecture components
+    implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$version_retrofit"
+    implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$version_retrofit"
+
+    // Dagger
+    implementation "com.google.dagger:dagger:$version_dagger"
+    kapt "com.google.dagger:dagger-compiler:$version_dagger"
+    implementation "com.google.dagger:dagger-android:$version_dagger"
+    implementation "com.google.dagger:dagger-android-support:$version_dagger"
+    kapt "com.google.dagger:dagger-android-processor:$version_dagger"
+
+    // Network
+    implementation "com.squareup.okhttp3:logging-interceptor:$version_okhttp"
+    implementation "org.apache.commons:commons-lang3:$version_apache"
+    implementation "com.github.bumptech.glide:glide:$version_glide"
+    kapt "com.github.bumptech.glide:compiler:$version_glide"
+
+    // Moshi for parsing the JSON format
+    implementation "com.squareup.moshi:moshi:$version_moshi"
+    implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
+
+    //Android RX
+    implementation "io.reactivex.rxjava2:rxjava:$version_rxjava"
+    implementation "io.reactivex.rxjava2:rxandroid:$version_rxandroid"
+
+    // Timber
+    implementation "com.jakewharton.timber:timber:$version_timber"
+
+    // MultiDex
+    implementation "androidx.multidex:multidex:$version_multidex"
+
+    //Junit
+    testImplementation "junit:junit:$version_junit"
+
+    // Dependencies for local unit tests
+    testImplementation "org.mockito:mockito-core:$version_mockito"
+
+    // Dependencies for Instrumentation tests
+    androidTestImplementation "androidx.test.ext:junit:$version_junit_ext"
+
+    // Testing Architecture components
+    testImplementation "androidx.arch.core:core-testing:$version_lifecycle_test"
+
+    // Android Testing Support Library's runner and rules
+    androidTestImplementation "androidx.test:runner:$version_runner"
+    androidTestImplementation  "androidx.test:rules:$version_rules"
+
+    // Espresso UI Testing
+    androidTestImplementation "androidx.test.espresso:espresso-core:$version_espresso"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$version_espresso"
+}

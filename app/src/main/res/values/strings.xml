@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">AppShack</string>
+    <string name="title_fragment_main">Pokemon list</string>
+    <string name="title_fragment_pokemon_details">Pokemon details</string>
+    <string name="retry">Retry</string>
+    <string name="failed_loading_msg">Something went wrong &#8230;</string>
+    <string name="number">#%s</string>
+    <string name="pokemon_info">#%s &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; %s</string>
+    <string name="species"><![CDATA[<b>Species: </b> &#160;&#160;&#160;&#160;&#160;&#160; %s]]></string>
+    <string name="types"><![CDATA[<b>Type: </b> &#160;&#160;&#160;&#160;&#160;&#160; %s]]></string>
+    <string name="height"><![CDATA[<b>Height: </b> &#160;&#160;&#160;&#160;&#160;&#160; %s decimetres]]></string>
+    <string name="weight"><![CDATA[<b>Weight: </b> &#160;&#160;&#160;&#160;&#160;&#160; %s hectograms]]></string>
+</resources>

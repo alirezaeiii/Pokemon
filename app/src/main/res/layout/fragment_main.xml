@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.MainFragment">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="se.appshack.android.refactoring.viewmodels.MainViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/ToolbarStyle"
+                app:layout_scrollFlags="scroll|enterAlways" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <ProgressBar
+            android:id="@+id/loading"
+            style="@style/LoadingStyle"
+            app:showLoading="@{vm.liveData}" />
+
+        <LinearLayout
+            android:id="@+id/error_view"
+            style="@style/ErrorViewStyle"
+            app:showError="@{vm.liveData}">
+
+            <TextView style="@style/ErrorTextViewStyle" />
+
+            <Button
+                android:id="@+id/retry_btn"
+                style="@style/ErrorButtonStyle" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:showData="@{vm.liveData}"
+            tools:listitem="@layout/viewholder_pokemon_list" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>
