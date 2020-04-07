@@ -37,12 +37,6 @@ constructor() // Required empty public constructor
             pokemon = factory.pokemon
         }
 
-        viewModel.liveData.observe(viewLifecycleOwner, Observer { resource ->
-            if (resource is Resource.Success) {
-                binding.pokemonDetails = resource.data
-            }
-        })
-
         with(binding) {
 
             retryBtn.setOnClickListener { viewModel.showPokemonDetails() }
@@ -50,6 +44,12 @@ constructor() // Required empty public constructor
             (activity as AppCompatActivity).setupActionBar(toolbar) {
                 setTitle(R.string.title_fragment_pokemon_details)
             }
+
+            viewModel.liveData.observe(viewLifecycleOwner, Observer { resource ->
+                if (resource is Resource.Success) {
+                    pokemonDetails = resource.data
+                }
+            })
 
             viewModel.genus.observe(viewLifecycleOwner, Observer { resource ->
                 if (resource is Resource.Success) {
