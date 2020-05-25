@@ -26,7 +26,7 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <ProgressBar
+        <ImageView
             android:id="@+id/loading"
             style="@style/LoadingStyle"
             app:showLoading="@{vm.liveData}" />

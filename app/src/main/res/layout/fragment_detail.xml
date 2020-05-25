@@ -115,7 +115,7 @@
 
             </androidx.core.widget.NestedScrollView>
 
-            <ProgressBar
+            <ImageView
                 style="@style/LoadingStyle"
                 app:showLoading="@{vm.liveData}"
                 app:showLoadingDetail="@{vm.genus}" />
