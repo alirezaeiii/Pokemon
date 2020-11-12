@@ -43,7 +43,7 @@ class DetailViewModel(
 
     fun showPokemonDetails() {
         arrayOf(composeObservable { api.getPokemonDetails(pokemonId) }
-            .doOnSubscribe { _liveData.postValue(Resource.Loading()) }
+            .doOnSubscribe { _liveData.value = Resource.Loading() }
             .subscribe({ details ->
                 _liveData.postValue(Resource.Success(details))
                 details.types.toMutableList().sortWith(compareBy { it.slot })
@@ -53,7 +53,7 @@ class DetailViewModel(
                 Timber.e(it)
             }
             , composeObservable { api.getPokemonSpecies(pokemonId) }.map { it.genera }
-                .doOnSubscribe { _genus.postValue(Resource.Loading()) }
+                .doOnSubscribe { _genus.value = Resource.Loading() }
                 .subscribe({
                     _genus.postValue(Resource.Success(it.find { genusModel -> genusModel.language.name == "en" }?.genus))
                 }) {

@@ -32,7 +32,7 @@ class MainViewModel(
     }
 
     fun showPokemonList() {
-        _liveData.postValue(Resource.Loading())
+        _liveData.value = Resource.Loading()
         composeObservable { api.getPokemonList(LIMIT) }.map { it.results }
             .subscribe({
                 _liveData.postValue(Resource.Success(it.asDomainModel()))
