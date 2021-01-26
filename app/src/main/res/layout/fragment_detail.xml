@@ -35,8 +35,7 @@
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:showData="@{vm.liveData}"
-                app:showDataDetail="@{vm.genus}">
+                app:showData="@{vm.liveData}">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -84,8 +83,7 @@
                         style="@style/DetailTextView"
                         app:layout_constraintEnd_toEndOf="@id/guideline"
                         app:layout_constraintStart_toStartOf="@id/guideline"
-                        app:layout_constraintTop_toBottomOf="@id/pokemonSpecies"
-                        app:showText="@{@string/types(vm.types)}" />
+                        app:layout_constraintTop_toBottomOf="@id/pokemonSpecies" />
 
 
                     <TextView
@@ -117,14 +115,12 @@
 
             <ImageView
                 style="@style/LoadingStyle"
-                app:showLoading="@{vm.liveData}"
-                app:showLoadingDetail="@{vm.genus}" />
+                app:showLoading="@{vm.liveData}" />
 
             <LinearLayout
                 android:id="@+id/error_view"
                 style="@style/ErrorViewStyle"
-                app:showError="@{vm.liveData}"
-                app:showErrorDetail="@{vm.genus}">
+                app:showError="@{vm.liveData}">
 
                 <TextView style="@style/ErrorTextViewStyle" />
 

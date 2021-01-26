@@ -8,27 +8,19 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 
-@BindingAdapter(value = ["showLoading", "showLoadingDetail"], requireAll = false)
-fun View.showLoading(resource: Resource<*>?, detailResource: Resource<*>?) {
-    visibility = if (resource is Resource.Loading || detailResource is Resource.Loading)
-        View.VISIBLE else View.GONE
+@BindingAdapter("showLoading")
+fun View.showLoading(resource: Resource<*>?) {
+    visibility = if (resource is Resource.Loading) View.VISIBLE else View.GONE
 }
 
-@BindingAdapter(value = ["showError", "showErrorDetail"], requireAll = false)
-fun View.showError(resource: Resource<*>?, detailResource: Resource<*>?) {
-    visibility = if (resource is Resource.Failure || detailResource is Resource.Failure)
-        View.VISIBLE else View.GONE
+@BindingAdapter("showError")
+fun View.showError(resource: Resource<*>?) {
+    visibility = if (resource is Resource.Failure) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("showData")
 fun View.showData(resource: Resource<*>?) {
     visibility = if (resource is Resource.Success) View.VISIBLE else View.GONE
-}
-
-@BindingAdapter(value = ["showData", "showDataDetail"])
-fun View.showData(resource: Resource<*>?, detailResource: Resource<*>?) {
-    visibility = if (resource is Resource.Success && detailResource is Resource.Success)
-        View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("imageUrl")

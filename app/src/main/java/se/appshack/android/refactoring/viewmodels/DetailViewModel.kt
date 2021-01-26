@@ -4,8 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
 import org.apache.commons.lang3.StringUtils
 import se.appshack.android.refactoring.domain.Pokemon
+import se.appshack.android.refactoring.network.GenusResponseModel
 import se.appshack.android.refactoring.network.PokemonService
 import se.appshack.android.refactoring.network.PokemonDetailsResponse
 import se.appshack.android.refactoring.util.Resource
@@ -25,42 +28,37 @@ class DetailViewModel(
     private val pokemonId: Int
 ) : BaseViewModel(schedulerProvider) {
 
-    private val _liveData = MutableLiveData<Resource<PokemonDetailsResponse>>()
-    val liveData: LiveData<Resource<PokemonDetailsResponse>>
+    private val _liveData = MutableLiveData<Resource<DetailWrapper>>()
+    val liveData: LiveData<Resource<DetailWrapper>>
         get() = _liveData
-
-    private val _types = MutableLiveData<String>()
-    val types: LiveData<String>
-        get() = _types
-
-    private val _genus = MutableLiveData<Resource<String>>()
-    val genus: LiveData<Resource<String>>
-        get() = _genus
 
     init {
         showPokemonDetails()
     }
 
     fun showPokemonDetails() {
-        arrayOf(composeObservable { api.getPokemonDetails(pokemonId) }
-            .doOnSubscribe { _liveData.value = Resource.Loading() }
-            .subscribe({ details ->
-                _liveData.postValue(Resource.Success(details))
-                details.types.toMutableList().sortWith(compareBy { it.slot })
-                _types.postValue(details.types.joinToString { StringUtils.capitalize(it.type.name) })
-            }) {
-                _liveData.postValue(Resource.Failure(it.localizedMessage))
-                Timber.e(it)
-            }
-            , composeObservable { api.getPokemonSpecies(pokemonId) }.map { it.genera }
-                .doOnSubscribe { _genus.value = Resource.Loading() }
-                .subscribe({
-                    _genus.postValue(Resource.Success(it.find { genusModel -> genusModel.language.name == "en" }?.genus))
-                }) {
-                    _genus.postValue(Resource.Failure(it.localizedMessage))
-                    Timber.e(it)
-                }).also { compositeDisposable.addAll(*it) }
+        _liveData.value = Resource.Loading()
+        val source1 = api.getPokemonDetails(pokemonId)
+        val source2 = api.getPokemonSpecies(pokemonId).map { it.genera }
+
+        composeObservable { Observable.zip(source1, source2,
+            BiFunction<PokemonDetailsResponse, List<GenusResponseModel>, DetailWrapper> {
+                    pokemonDetail, genusModels -> DetailWrapper(pokemonDetail,
+                    pokemonDetail.types.joinToString { StringUtils.capitalize(it.type.name) },
+                    genusModels.find { genusModel -> genusModel.language.name == "en" }?.genus) })
+        }.subscribe({
+            _liveData.postValue(Resource.Success(it))
+        }) {
+            _liveData.postValue(Resource.Failure(it.localizedMessage))
+            Timber.e(it)
+        }.also { compositeDisposable.add(it) }
     }
+
+    class DetailWrapper(
+        val pokemonDetail: PokemonDetailsResponse,
+        val type: String,
+        val genus: String?
+    )
 
     /**
      * Factory for constructing DetailViewModel with parameter

@@ -26,7 +26,7 @@ constructor() // Required empty public constructor
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         val viewModel = ViewModelProvider(this, factory).get(DetailViewModel::class.java)
 
@@ -47,13 +47,9 @@ constructor() // Required empty public constructor
 
             viewModel.liveData.observe(viewLifecycleOwner, Observer { resource ->
                 if (resource is Resource.Success) {
-                    pokemonDetails = resource.data
-                }
-            })
-
-            viewModel.genus.observe(viewLifecycleOwner, Observer { resource ->
-                if (resource is Resource.Success) {
-                    pokemonSpecies.bindText(getString(R.string.species, resource.data))
+                    pokemonDetails = resource.data?.pokemonDetail
+                    pokemonSpecies.bindText(getString(R.string.species, resource.data?.genus))
+                    pokemonTypes.bindText(getString(R.string.types, resource.data?.type))
                 }
             })
         }
