@@ -39,8 +39,6 @@ constructor() // Required empty public constructor
 
         with(binding) {
 
-            retryBtn.setOnClickListener { viewModel.showPokemonDetails() }
-
             (activity as AppCompatActivity).setupActionBar(toolbar) {
                 setTitle(R.string.title_fragment_pokemon_details)
             }

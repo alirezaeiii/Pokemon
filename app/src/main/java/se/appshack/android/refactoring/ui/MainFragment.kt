@@ -59,12 +59,9 @@ constructor() // Required empty public constructor
                 })
 
             with(binding!!) {
+
                 recyclerview.apply {
                     adapter = viewModelAdapter
-                }
-
-                retryBtn.setOnClickListener {
-                    viewModel.showPokemonList()
                 }
 
                 (activity as AppCompatActivity).setupActionBar(toolbar) {

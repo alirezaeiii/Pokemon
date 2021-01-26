@@ -40,6 +40,7 @@
 
             <Button
                 android:id="@+id/retry_btn"
+                android:onClick="@{()-> vm.showPokemonList()}"
                 style="@style/ErrorButtonStyle" />
 
         </LinearLayout>
