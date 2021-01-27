@@ -1,15 +1,13 @@
 package se.appshack.android.refactoring.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import io.reactivex.Observable
 import se.appshack.android.refactoring.domain.Pokemon
+import se.appshack.android.refactoring.network.NamedResponseModel
 import se.appshack.android.refactoring.network.PokemonService
 import se.appshack.android.refactoring.network.asDomainModel
-import se.appshack.android.refactoring.util.Resource
 import se.appshack.android.refactoring.util.schedulars.BaseSchedulerProvider
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -19,27 +17,17 @@ import javax.inject.Inject
  * results after the new Fragment or Activity is available.
  */
 class MainViewModel(
-    private val api: PokemonService,
+    api: PokemonService,
     schedulerProvider: BaseSchedulerProvider
-) : BaseViewModel(schedulerProvider) {
+) : BaseViewModel<List<Pokemon>, List<NamedResponseModel>>(schedulerProvider) {
 
-    private val _liveData = MutableLiveData<Resource<List<Pokemon>>>()
-    val liveData: LiveData<Resource<List<Pokemon>>>
-        get() = _liveData
+    override val requestObservable: Observable<List<NamedResponseModel>> =
+        api.getPokemonList(LIMIT).map { it.results }
+
+    override fun getSuccessResult(it: List<NamedResponseModel>): List<Pokemon> = it.asDomainModel()
 
     init {
-        showPokemonList()
-    }
-
-    fun showPokemonList() {
-        _liveData.value = Resource.Loading()
-        composeObservable { api.getPokemonList(LIMIT) }.map { it.results }
-            .subscribe({
-                _liveData.postValue(Resource.Success(it.asDomainModel()))
-            }) {
-                _liveData.postValue(Resource.Failure(it.localizedMessage))
-                Timber.e(it)
-            }.also { compositeDisposable.add(it) }
+        sendRequest()
     }
 
     /**

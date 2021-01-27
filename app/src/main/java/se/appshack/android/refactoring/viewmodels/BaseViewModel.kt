@@ -1,16 +1,40 @@
 package se.appshack.android.refactoring.viewmodels
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import se.appshack.android.refactoring.util.EspressoIdlingResource
+import se.appshack.android.refactoring.util.Resource
 import se.appshack.android.refactoring.util.schedulars.BaseSchedulerProvider
+import timber.log.Timber
 
-open class BaseViewModel(private val schedulerProvider: BaseSchedulerProvider) : ViewModel() {
+abstract class BaseViewModel<T, R>(private val schedulerProvider: BaseSchedulerProvider) :
+    ViewModel() {
 
-    protected val compositeDisposable = CompositeDisposable()
+    private val compositeDisposable = CompositeDisposable()
 
-    protected fun <T> composeObservable(task: () -> Observable<T>): Observable<T> = task()
+    private val _liveData = MutableLiveData<Resource<T>>()
+    val liveData: LiveData<Resource<T>>
+        get() = _liveData
+
+    protected abstract val requestObservable: Observable<R>
+
+    protected abstract fun getSuccessResult(it: R): T
+
+    fun sendRequest() {
+        _liveData.value = Resource.Loading()
+        composeObservable { requestObservable }
+            .subscribe({
+                _liveData.postValue(Resource.Success(getSuccessResult(it)))
+            }) {
+                _liveData.postValue(Resource.Failure(it.localizedMessage))
+                Timber.e(it)
+            }.also { compositeDisposable.add(it) }
+    }
+
+    private fun <T> composeObservable(task: () -> Observable<T>): Observable<T> = task()
         .doOnSubscribe { EspressoIdlingResource.increment() } // App is busy until further notice
         .subscribeOn(schedulerProvider.io())
         .observeOn(schedulerProvider.ui())

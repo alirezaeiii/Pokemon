@@ -126,7 +126,7 @@
 
                 <Button
                     android:id="@+id/retry_btn"
-                    android:onClick="@{()-> vm.showPokemonDetails()}"
+                    android:onClick="@{()-> vm.sendRequest()}"
                     style="@style/ErrorButtonStyle" />
 
             </LinearLayout>
