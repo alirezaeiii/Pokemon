@@ -10,8 +10,10 @@ import se.appshack.android.refactoring.util.Resource
 import se.appshack.android.refactoring.util.schedulars.BaseSchedulerProvider
 import timber.log.Timber
 
-abstract class BaseViewModel<T, R>(private val schedulerProvider: BaseSchedulerProvider) :
-    ViewModel() {
+abstract class BaseViewModel<T, R>(
+    private val schedulerProvider: BaseSchedulerProvider,
+    private val requestObservable: Observable<R>
+) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -19,9 +21,11 @@ abstract class BaseViewModel<T, R>(private val schedulerProvider: BaseSchedulerP
     val liveData: LiveData<Resource<T>>
         get() = _liveData
 
-    protected abstract val requestObservable: Observable<R>
-
     protected abstract fun getSuccessResult(it: R): T
+
+    init {
+        sendRequest()
+    }
 
     fun sendRequest() {
         _liveData.value = Resource.Loading()

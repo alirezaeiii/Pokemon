@@ -2,7 +2,6 @@ package se.appshack.android.refactoring.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import io.reactivex.Observable
 import se.appshack.android.refactoring.domain.Pokemon
 import se.appshack.android.refactoring.network.NamedResponseModel
 import se.appshack.android.refactoring.network.PokemonService
@@ -19,16 +18,10 @@ import javax.inject.Inject
 class MainViewModel(
     api: PokemonService,
     schedulerProvider: BaseSchedulerProvider
-) : BaseViewModel<List<Pokemon>, List<NamedResponseModel>>(schedulerProvider) {
-
-    override val requestObservable: Observable<List<NamedResponseModel>> =
-        api.getPokemonList(LIMIT).map { it.results }
+) : BaseViewModel<List<Pokemon>, List<NamedResponseModel>>(schedulerProvider,
+    api.getPokemonList(LIMIT).map { it.results }) {
 
     override fun getSuccessResult(it: List<NamedResponseModel>): List<Pokemon> = it.asDomainModel()
-
-    init {
-        sendRequest()
-    }
 
     /**
      * Factory for constructing MainViewModel with parameter

@@ -23,23 +23,17 @@ class DetailViewModel(
     api: PokemonService,
     schedulerProvider: BaseSchedulerProvider,
     pokemonId: Int
-) : BaseViewModel<DetailWrapper, DetailWrapper>(schedulerProvider) {
-
-    override val requestObservable: Observable<DetailWrapper> =
-        Observable.zip(api.getPokemonDetails(pokemonId),
-            api.getPokemonSpecies(pokemonId).map { it.genera },
-            BiFunction<PokemonDetailsResponse, List<GenusResponseModel>, DetailWrapper> {
-                    pokemonDetail, genusModels -> DetailWrapper(pokemonDetail,
-                    pokemonDetail.types.joinToString { StringUtils.capitalize(it.type.name) },
-                    genusModels.find { genusModel -> genusModel.language.name == "en" }?.genus
-                )
-            })
+) : BaseViewModel<DetailWrapper, DetailWrapper>(schedulerProvider,
+    Observable.zip(api.getPokemonDetails(pokemonId),
+        api.getPokemonSpecies(pokemonId).map { it.genera },
+        BiFunction<PokemonDetailsResponse, List<GenusResponseModel>, DetailWrapper> {
+                pokemonDetail, genusModels -> DetailWrapper(pokemonDetail,
+            pokemonDetail.types.joinToString { StringUtils.capitalize(it.type.name) },
+            genusModels.find { genusModel -> genusModel.language.name == "en" }?.genus
+        )
+        })) {
 
     override fun getSuccessResult(it: DetailWrapper): DetailWrapper = it
-
-    init {
-        sendRequest()
-    }
 
     class DetailWrapper(
         val pokemonDetail: PokemonDetailsResponse,
