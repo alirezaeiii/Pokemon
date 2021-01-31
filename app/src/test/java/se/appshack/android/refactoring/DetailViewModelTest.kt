@@ -65,16 +65,11 @@ class DetailViewModelTest {
         with(viewModel.liveData.value) {
             assertThat(this, `is`(notNullValue()))
             if (this is Resource.Success) {
-                assertTrue(data?.name == "pokemon")
-                assertThat(data?.height, `is`(10))
-                assertThat(data?.weight, `is`(225))
-            }
-        }
-
-        with(viewModel.genus.value) {
-            assertThat(this, `is`(notNullValue()))
-            if (this is Resource.Success) {
-                assertTrue(data == "genus")
+                assertTrue(data?.pokemonDetail?.name == "pokemon")
+                assertThat(data?.pokemonDetail?.height, `is`(10))
+                assertThat(data?.pokemonDetail?.weight, `is`(225))
+                assertThat(data?.genus, `is`(notNullValue()))
+                assertTrue(data?.genus == "genus")
             }
         }
     }
@@ -91,40 +86,7 @@ class DetailViewModelTest {
             assertThat(this, `is`(notNullValue()))
             if (this is Resource.Failure) {
                 assertThat(cause, `is`(notNullValue()))
-                assertThat(cause , `is`("error"))
-            }
-        }
-
-        with(viewModel.genus.value) {
-            assertThat(this, `is`(notNullValue()))
-            if (this is Resource.Success) {
-                assertThat(data, `is`("genus"))
-            }
-        }
-    }
-
-    @Test
-    fun errorLoadingPokemonSpecies() {
-        val pokemonSpeciesResponse = Observable.error<PokemonSpeciesResponse>(Exception("error"))
-        `when`(api.getPokemonDetails(anyInt())).thenReturn(Observable.just(pokemonDetailsResponse))
-        `when`(api.getPokemonSpecies(anyInt())).thenReturn(pokemonSpeciesResponse)
-
-        val viewModel = DetailViewModel(api, schedulerProvider, anyInt())
-
-        with(viewModel.liveData.value) {
-            assertThat(this, `is`(notNullValue()))
-            if (this is Resource.Success) {
-                assertThat(data?.name, `is`("pokemon"))
-                assertThat(data?.height, `is`(10))
-                assertThat(data?.weight, `is`(225))
-            }
-        }
-
-        with(viewModel.genus.value) {
-            assertThat(this, `is`(notNullValue()))
-            if (this is Resource.Failure) {
-                assertThat(cause, `is`(notNullValue()))
-                assertThat(cause , `is`("error"))
+                assertThat(cause, `is`("error"))
             }
         }
     }
