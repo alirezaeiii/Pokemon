@@ -49,11 +49,11 @@ class MainViewModelTest {
 
         val viewModel = MainViewModel(api, schedulerProvider)
 
-        with(viewModel.liveData.value) {
-            assertThat(this, `is`(notNullValue()))
-            if (this is Resource.Success) {
-                assertTrue(data!!.isNotEmpty())
-                assertThat(data?.size, `is`(1))
+        viewModel.liveData.value.let {
+            assertThat(it, `is`(notNullValue()))
+            if (it is Resource.Success) {
+                it.data?.let { data -> assertTrue(data.isNotEmpty()) }
+                assertThat(it.data?.size, `is`(1))
             }
         }
     }
@@ -65,11 +65,11 @@ class MainViewModelTest {
 
         val viewModel = MainViewModel(api, schedulerProvider)
 
-        with(viewModel.liveData.value) {
-            assertThat(this, `is`(notNullValue()))
-            if (this is Resource.Failure) {
-                assertThat(cause, `is`(notNullValue()))
-                assertThat(cause, `is`("error"))
+        viewModel.liveData.value.let {
+            assertThat(it, `is`(notNullValue()))
+            if (it is Resource.Failure) {
+                assertThat(it.cause, `is`(notNullValue()))
+                assertThat(it.cause, `is`("error"))
             }
         }
     }
