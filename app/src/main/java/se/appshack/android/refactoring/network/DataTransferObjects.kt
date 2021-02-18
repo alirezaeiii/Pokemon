@@ -9,48 +9,48 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class NamedResponseModel(
-    val name: String,
-    val url: String
+        val name: String,
+        val url: String
 )
 
 class PokemonListResponse(
-    val count: Int,
-    val next: String,
-    val previous: String?,
-    val results: List<NamedResponseModel>
+        val count: Int,
+        val next: String,
+        val previous: String?,
+        val results: List<NamedResponseModel>
 )
 
 class GenusResponseModel(
-    val genus: String,
-    val language: NamedResponseModel
+        val genus: String,
+        val language: NamedResponseModel
 )
 
 class PokemonSpeciesResponse(
-    val id: Int,
-    val name: String,
-    val genera: List<GenusResponseModel>
+        val id: Int,
+        val name: String,
+        val genera: List<GenusResponseModel>
 )
 
 class PokemonTypeModel(
-    val slot: Int,
-    val type: NamedResponseModel
+        val slot: Int,
+        val type: NamedResponseModel
 )
 
 class PokemonSpritesModel(
-    @Json(name = "front_default")
-    val urlFront: String,
-    @Json(name = "back_default")
-    val urlBack: String
+        @Json(name = "front_default")
+        val urlFront: String,
+        @Json(name = "back_default")
+        val urlBack: String
 )
 
 class PokemonDetailsResponse(
-    val id: Int,
-    val name: String,
-    val height: Int,
-    val weight: Int,
-    val species: NamedResponseModel,
-    val types: List<PokemonTypeModel>,
-    val sprites: PokemonSpritesModel
+        val id: Int,
+        val name: String,
+        val height: Int,
+        val weight: Int,
+        val species: NamedResponseModel,
+        val types: List<PokemonTypeModel>,
+        val sprites: PokemonSpritesModel
 )
 
 fun List<NamedResponseModel>.asDomainModel(): List<Pokemon> {
@@ -71,14 +71,14 @@ fun List<NamedResponseModel>.asDomainModel(): List<Pokemon> {
     for (index in ids) {
         val namedResponseModel = this[index - 1]
         val id = namedResponseModel.url.substring(
-            namedResponseModel.url.indexOf("pokemon/") + 8,
-            namedResponseModel.url.length - 1
+                namedResponseModel.url.indexOf("pokemon/") + 8,
+                namedResponseModel.url.length - 1
         ).toInt()
         pokemonList.add(
-            Pokemon(
-                id = id,
-                name = StringUtils.capitalize(namedResponseModel.name)
-            )
+                Pokemon(
+                        id = id,
+                        name = StringUtils.capitalize(namedResponseModel.name)
+                )
         )
     }
     return pokemonList
