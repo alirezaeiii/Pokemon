@@ -56,10 +56,13 @@ class PokemonDetailsResponse(
 fun List<NamedResponseModel>.asDomainModel(): List<Pokemon> {
     val ids = ArrayList<Int>()
     var i = 0
-    val numOfItems = if (size == LIMIT) 20 else 1
-    val limit = if (size == LIMIT) size else 1
-    while (i < numOfItems) {
-        val id = Random().nextInt(1..limit)
+    val pairLimit : Pair<Int, Int> = if (size == LIMIT) {
+        Pair(20, size)
+    } else {
+        Pair(1, 1)
+    }
+    while (i < pairLimit.first) {
+        val id = Random().nextInt(1..pairLimit.second)
         if (!ids.contains(id)) {
             ids.add(id)
             i++
