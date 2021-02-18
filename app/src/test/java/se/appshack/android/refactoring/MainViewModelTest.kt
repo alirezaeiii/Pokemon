@@ -44,7 +44,7 @@ class MainViewModelTest {
     fun loadPokemon() {
         val pokemonListResponse = PokemonListResponse(
             1, "next", null,
-            listOf(NamedResponseModel("pokemon", "https://pokeapi.co/api/v2/pokemon/12"))
+            listOf(NamedResponseModel("pokemon", "https://pokeapi.co/api/v2/pokemon/1 "))
         )
         `when`(api.getPokemonList(anyInt())).thenReturn(Single.just(pokemonListResponse))
 
