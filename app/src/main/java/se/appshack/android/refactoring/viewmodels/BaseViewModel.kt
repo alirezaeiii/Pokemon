@@ -3,7 +3,7 @@ package se.appshack.android.refactoring.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import se.appshack.android.refactoring.util.EspressoIdlingResource
 import se.appshack.android.refactoring.util.Resource
@@ -12,7 +12,7 @@ import timber.log.Timber
 
 abstract class BaseViewModel<T, R>(
     private val schedulerProvider: BaseSchedulerProvider,
-    private val requestObservable: Observable<R>
+    private val requestObservable: Single<R>
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -38,7 +38,7 @@ abstract class BaseViewModel<T, R>(
             }.also { compositeDisposable.add(it) }
     }
 
-    private inline fun <T> composeObservable(task: () -> Observable<T>): Observable<T> = task()
+    private inline fun <T> composeObservable(task: () -> Single<T>): Single<T> = task()
         .doOnSubscribe { EspressoIdlingResource.increment() } // App is busy until further notice
         .subscribeOn(schedulerProvider.io())
         .observeOn(schedulerProvider.ui())

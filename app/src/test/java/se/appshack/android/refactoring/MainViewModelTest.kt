@@ -1,8 +1,9 @@
 package se.appshack.android.refactoring
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import io.reactivex.Observable
-import org.hamcrest.CoreMatchers.*
+import io.reactivex.Single
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -14,8 +15,8 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import se.appshack.android.refactoring.network.NamedResponseModel
-import se.appshack.android.refactoring.network.PokemonService
 import se.appshack.android.refactoring.network.PokemonListResponse
+import se.appshack.android.refactoring.network.PokemonService
 import se.appshack.android.refactoring.util.Resource
 import se.appshack.android.refactoring.util.schedulars.BaseSchedulerProvider
 import se.appshack.android.refactoring.util.schedulars.ImmediateSchedulerProvider
@@ -43,9 +44,9 @@ class MainViewModelTest {
     fun loadPokemon() {
         val pokemonListResponse = PokemonListResponse(
             1, "next", null,
-            listOf(NamedResponseModel("pokemon", "https://pokeapi.co/api/v2/pokemon/1"))
+            listOf(NamedResponseModel("pokemon", "https://pokeapi.co/api/v2/pokemon/12"))
         )
-        `when`(api.getPokemonList(anyInt())).thenReturn(Observable.just(pokemonListResponse))
+        `when`(api.getPokemonList(anyInt())).thenReturn(Single.just(pokemonListResponse))
 
         val viewModel = MainViewModel(api, schedulerProvider)
 
@@ -60,7 +61,7 @@ class MainViewModelTest {
 
     @Test
     fun errorLoadingPokemon() {
-        val observableResponse = Observable.error<PokemonListResponse>(Exception("error"))
+        val observableResponse = Single.error<PokemonListResponse>(Exception("error"))
         `when`(api.getPokemonList(anyInt())).thenReturn(observableResponse)
 
         val viewModel = MainViewModel(api, schedulerProvider)

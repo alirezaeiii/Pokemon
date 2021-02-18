@@ -4,7 +4,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
-import io.reactivex.Observable
+import io.reactivex.Single
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -25,13 +25,13 @@ import javax.inject.Singleton
 interface PokemonService {
 
     @GET("pokemon/")
-    fun getPokemonList(@Query("limit") limit: Int): Observable<PokemonListResponse>
+    fun getPokemonList(@Query("limit") limit: Int): Single<PokemonListResponse>
 
     @GET("pokemon/{id}")
-    fun getPokemonDetails(@Path("id") id: Int): Observable<PokemonDetailsResponse>
+    fun getPokemonDetails(@Path("id") id: Int): Single<PokemonDetailsResponse>
 
     @GET("pokemon-species/{id}")
-    fun getPokemonSpecies(@Path("id") id: Int): Observable<PokemonSpeciesResponse>
+    fun getPokemonSpecies(@Path("id") id: Int): Single<PokemonSpeciesResponse>
 }
 
 /**
@@ -43,9 +43,9 @@ private val moshi = Moshi.Builder()
     .build()
 
 private fun getLoggerInterceptor(): Interceptor {
-    val logger = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
+    val logger = HttpLoggingInterceptor {
         Timber.d(it)
-    })
+    }
     logger.level = HttpLoggingInterceptor.Level.BASIC
     return logger
 }

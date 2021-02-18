@@ -2,7 +2,7 @@ package se.appshack.android.refactoring.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import org.apache.commons.lang3.StringUtils
 import se.appshack.android.refactoring.domain.Pokemon
@@ -10,8 +10,8 @@ import se.appshack.android.refactoring.network.GenusResponseModel
 import se.appshack.android.refactoring.network.PokemonDetailsResponse
 import se.appshack.android.refactoring.network.PokemonService
 import se.appshack.android.refactoring.util.schedulars.BaseSchedulerProvider
-import javax.inject.Inject
 import se.appshack.android.refactoring.viewmodels.DetailViewModel.DetailWrapper
+import javax.inject.Inject
 
 /**
  * DetailViewModel designed to store and manage UI-related data in a lifecycle conscious way. This
@@ -24,7 +24,7 @@ class DetailViewModel(
     schedulerProvider: BaseSchedulerProvider,
     pokemonId: Int
 ) : BaseViewModel<DetailWrapper, DetailWrapper>(schedulerProvider,
-    Observable.zip(api.getPokemonDetails(pokemonId),
+    Single.zip(api.getPokemonDetails(pokemonId),
         api.getPokemonSpecies(pokemonId).map { it.genera },
         BiFunction<PokemonDetailsResponse, List<GenusResponseModel>, DetailWrapper> {
                 pokemonDetail, genusModels -> DetailWrapper(pokemonDetail,

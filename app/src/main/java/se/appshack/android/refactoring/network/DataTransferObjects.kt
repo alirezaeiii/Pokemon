@@ -4,6 +4,7 @@ import com.squareup.moshi.Json
 import org.apache.commons.lang3.StringUtils
 import se.appshack.android.refactoring.domain.Pokemon
 import se.appshack.android.refactoring.util.nextInt
+import se.appshack.android.refactoring.viewmodels.MainViewModel.Companion.LIMIT
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -55,8 +56,9 @@ class PokemonDetailsResponse(
 fun List<NamedResponseModel>.asDomainModel(): List<Pokemon> {
     val ids = ArrayList<Int>()
     var i = 0
-    while (i < 20) {
-        val id = Random().nextInt(1..151)
+    val limit = if (size == LIMIT) 20 else 1
+    while (i < limit) {
+        val id = Random().nextInt(1..size)
         if (!ids.contains(id)) {
             ids.add(id)
             i++

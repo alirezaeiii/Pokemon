@@ -1,7 +1,7 @@
 package se.appshack.android.refactoring
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import io.reactivex.Observable
+import io.reactivex.Single
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
@@ -57,8 +57,8 @@ class DetailViewModelTest {
 
     @Test
     fun loadPokemonDetails() {
-        `when`(api.getPokemonDetails(anyInt())).thenReturn(Observable.just(pokemonDetailsResponse))
-        `when`(api.getPokemonSpecies(anyInt())).thenReturn(Observable.just(pokemonSpecies))
+        `when`(api.getPokemonDetails(anyInt())).thenReturn(Single.just(pokemonDetailsResponse))
+        `when`(api.getPokemonSpecies(anyInt())).thenReturn(Single.just(pokemonSpecies))
 
         val viewModel = DetailViewModel(api, schedulerProvider, anyInt())
 
@@ -76,9 +76,9 @@ class DetailViewModelTest {
 
     @Test
     fun errorLoadingPokemonDetails() {
-        val pokemonDetailsResponse = Observable.error<PokemonDetailsResponse>(Exception("error"))
+        val pokemonDetailsResponse = Single.error<PokemonDetailsResponse>(Exception("error"))
         `when`(api.getPokemonDetails(anyInt())).thenReturn(pokemonDetailsResponse)
-        `when`(api.getPokemonSpecies(anyInt())).thenReturn(Observable.just(pokemonSpecies))
+        `when`(api.getPokemonSpecies(anyInt())).thenReturn(Single.just(pokemonSpecies))
 
         val viewModel = DetailViewModel(api, schedulerProvider, anyInt())
 

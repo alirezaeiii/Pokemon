@@ -40,6 +40,6 @@ class MainViewModel(
     }
 
     companion object {
-        private const val LIMIT = 151
+        const val LIMIT = 151
     }
 }
