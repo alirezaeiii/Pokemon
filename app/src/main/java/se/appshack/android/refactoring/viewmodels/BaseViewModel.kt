@@ -12,7 +12,7 @@ import timber.log.Timber
 
 abstract class BaseViewModel<T, R>(
     private val schedulerProvider: BaseSchedulerProvider,
-    private val requestObservable: Single<R>
+    private val requestSingle: Single<R>
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -29,7 +29,7 @@ abstract class BaseViewModel<T, R>(
 
     fun sendRequest() {
         _liveData.value = Resource.Loading()
-        composeObservable { requestObservable }
+        composeSingle { requestSingle }
             .subscribe({
                 _liveData.postValue(Resource.Success(getSuccessResult(it)))
             }) {
@@ -38,7 +38,7 @@ abstract class BaseViewModel<T, R>(
             }.also { compositeDisposable.add(it) }
     }
 
-    private inline fun <T> composeObservable(task: () -> Single<T>): Single<T> = task()
+    private inline fun <T> composeSingle(task: () -> Single<T>): Single<T> = task()
         .doOnSubscribe { EspressoIdlingResource.increment() } // App is busy until further notice
         .subscribeOn(schedulerProvider.io())
         .observeOn(schedulerProvider.ui())
