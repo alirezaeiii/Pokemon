@@ -11,6 +11,7 @@ import dagger.android.support.DaggerFragment
 import se.appshack.android.refactoring.BR
 import se.appshack.android.refactoring.R
 import se.appshack.android.refactoring.databinding.FragmentDetailBinding
+import se.appshack.android.refactoring.domain.Pokemon
 import se.appshack.android.refactoring.util.Resource
 import se.appshack.android.refactoring.util.bindText
 import se.appshack.android.refactoring.util.setupActionBar
@@ -24,6 +25,9 @@ constructor() // Required empty public constructor
     @Inject
     lateinit var factory: DetailViewModel.Factory
 
+    @Inject
+    lateinit var pokemon: Pokemon
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -34,7 +38,7 @@ constructor() // Required empty public constructor
             setVariable(BR.vm, viewModel)
             // Set the lifecycleOwner so DataBinding can observe LiveData
             lifecycleOwner = viewLifecycleOwner
-            pokemon = arguments?.let { DetailFragmentArgs.fromBundle(it).pokemon }
+            pokemon = this@DetailFragment.pokemon
         }
 
         with(binding) {
