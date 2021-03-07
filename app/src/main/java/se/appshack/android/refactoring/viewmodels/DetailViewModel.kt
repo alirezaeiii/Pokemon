@@ -23,7 +23,7 @@ class DetailViewModel(
     api: PokemonService,
     schedulerProvider: BaseSchedulerProvider,
     pokemonId: Int
-) : BaseViewModel<DetailWrapper, DetailWrapper>(schedulerProvider,
+) : BasePokemonViewModel<DetailWrapper, DetailWrapper>(schedulerProvider,
     Single.zip(api.getPokemonDetails(pokemonId),
         api.getPokemonSpecies(pokemonId).map { it.genera },
         BiFunction<PokemonDetailsResponse, List<GenusResponseModel>, DetailWrapper> {
@@ -32,8 +32,6 @@ class DetailViewModel(
             genusModels.find { genusModel -> genusModel.language.name == "en" }?.genus
         )
         })) {
-
-    override fun getSuccessResult(it: DetailWrapper): DetailWrapper = it
 
     class DetailWrapper(
         val pokemonDetail: PokemonDetailsResponse,
