@@ -47,7 +47,7 @@ class DetailViewModel(
     class Factory @Inject constructor(
         private val api: PokemonService,
         private val schedulerProvider: BaseSchedulerProvider,
-        val pokemon: Pokemon
+        private val pokemon: Pokemon
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(DetailViewModel::class.java)) {

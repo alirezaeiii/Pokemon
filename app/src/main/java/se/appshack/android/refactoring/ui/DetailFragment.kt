@@ -34,7 +34,7 @@ constructor() // Required empty public constructor
             setVariable(BR.vm, viewModel)
             // Set the lifecycleOwner so DataBinding can observe LiveData
             lifecycleOwner = viewLifecycleOwner
-            pokemon = factory.pokemon
+            pokemon = arguments?.let { DetailFragmentArgs.fromBundle(it).pokemon }
         }
 
         with(binding) {
