@@ -23,7 +23,7 @@ class DetailViewModel(
     api: PokemonService,
     schedulerProvider: BaseSchedulerProvider,
     pokemonId: Int
-) : BasePokemonViewModel<DetailWrapper, DetailWrapper>(schedulerProvider,
+) : BaseDetailViewModel<DetailWrapper>(schedulerProvider,
     Single.zip(api.getPokemonDetails(pokemonId),
         api.getPokemonSpecies(pokemonId).map { it.genera },
         BiFunction<PokemonDetailsResponse, List<GenusResponseModel>, DetailWrapper> {
