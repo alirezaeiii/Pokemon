@@ -9,17 +9,17 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 
 @BindingAdapter("showLoading")
-fun View.showLoading(resource: Resource<*>?) {
+fun <T> View.showLoading(resource: Resource<T>?) {
     visibility = if (resource is Resource.Loading) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("showError")
-fun View.showError(resource: Resource<*>?) {
+fun <T> View.showError(resource: Resource<T>?) {
     visibility = if (resource is Resource.Failure) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("showData")
-fun View.showData(resource: Resource<*>?) {
+fun <T> View.showData(resource: Resource<T>?) {
     visibility = if (resource is Resource.Success) View.VISIBLE else View.GONE
 }
 
