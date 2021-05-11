@@ -6,7 +6,7 @@ import se.appshack.android.refactoring.util.schedulars.BaseSchedulerProvider
 import se.appshack.android.refactoring.util.schedulars.SchedulerProvider
 
 @Module
-abstract class BaseModule {
+abstract class AppModule {
 
     @Binds
     internal abstract fun bindSchedulerProvider(schedulerProvider: SchedulerProvider): BaseSchedulerProvider

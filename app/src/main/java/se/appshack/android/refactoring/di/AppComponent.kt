@@ -14,7 +14,7 @@ import se.appshack.android.refactoring.network.Network
     modules = [ActivityBindingModule::class,
         AndroidSupportInjectionModule::class,
         Network::class,
-        BaseModule::class]
+        AppModule::class]
 )
 interface AppComponent : AndroidInjector<PokemonApplication> {
 
