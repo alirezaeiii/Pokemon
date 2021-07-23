@@ -24,6 +24,10 @@ abstract class BaseViewModel<T, R>(
     protected abstract fun getSuccessResult(it: R): T
 
     fun sendRequest() {
+        sendRequest(requestSingle)
+    }
+
+    protected fun sendRequest(requestSingle: Single<R>) {
         _liveData.value = Resource.Loading()
         composeSingle { requestSingle }
             .subscribe({
