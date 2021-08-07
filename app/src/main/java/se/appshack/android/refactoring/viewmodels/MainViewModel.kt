@@ -21,10 +21,6 @@ class MainViewModel(
 ) : BaseViewModel<List<Pokemon>, List<NamedResponseModel>>(schedulerProvider,
     api.getPokemonList(LIMIT).map { it.results }) {
 
-    init {
-        sendRequest()
-    }
-
     override fun getSuccessResult(it: List<NamedResponseModel>): List<Pokemon> = it.asDomainModel()
 
     /**

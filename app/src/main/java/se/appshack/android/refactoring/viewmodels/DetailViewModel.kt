@@ -33,10 +33,6 @@ class DetailViewModel(
         )
         })) {
 
-    init {
-        sendRequest()
-    }
-
     class DetailWrapper(
         val pokemonDetail: PokemonDetailsResponse,
         val type: String,
