@@ -8,15 +8,15 @@
 
         <variable
             name="pokemon"
-            type="se.appshack.android.refactoring.domain.Pokemon" />
+            type="se.sample.android.refactoring.domain.Pokemon" />
 
         <variable
             name="pokemon_details"
-            type="se.appshack.android.refactoring.network.PokemonDetailsResponse" />
+            type="se.sample.android.refactoring.network.PokemonDetailsResponse" />
 
         <variable
             name="vm"
-            type="se.appshack.android.refactoring.viewmodels.DetailViewModel" />
+            type="se.sample.android.refactoring.viewmodels.DetailViewModel" />
     </data>
 
     <LinearLayout

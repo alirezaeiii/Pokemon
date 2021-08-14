@@ -15,7 +15,7 @@ androidExtensions {
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "se.appshack.android.refactoring"
+        applicationId "se.sample.android.refactoring"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

@@ -8,7 +8,7 @@
 
         <variable
             name="vm"
-            type="se.appshack.android.refactoring.viewmodels.MainViewModel" />
+            type="se.sample.android.refactoring.viewmodels.MainViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

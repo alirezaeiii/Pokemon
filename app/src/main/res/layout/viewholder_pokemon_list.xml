@@ -5,11 +5,11 @@
 
         <variable
             name="pokemonItem"
-            type="se.appshack.android.refactoring.domain.Pokemon" />
+            type="se.sample.android.refactoring.domain.Pokemon" />
 
         <variable
             name="callback"
-            type="se.appshack.android.refactoring.ui.MainAdapter.OnClickListener" />
+            type="se.sample.android.refactoring.ui.MainAdapter.OnClickListener" />
 
     </data>
 
