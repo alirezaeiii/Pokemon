@@ -29,16 +29,18 @@ constructor() // Required empty public constructor
      */
     private lateinit var viewModelAdapter: MainAdapter
 
-    private var binding: FragmentMainBinding? = null
+    private var _binding: FragmentMainBinding? = null
+
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        if (binding == null) {
+    ): View {
+        if (_binding == null) {
 
             val viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
 
-            binding = FragmentMainBinding.inflate(inflater, container, false).apply {
+            _binding = FragmentMainBinding.inflate(inflater, container, false).apply {
                 setVariable(BR.vm, viewModel)
                 // Set the lifecycleOwner so DataBinding can observe LiveData
                 lifecycleOwner = viewLifecycleOwner
@@ -58,7 +60,7 @@ constructor() // Required empty public constructor
                     }
                 })
 
-            with(binding!!) {
+            with(binding) {
 
                 recyclerview.apply {
                     adapter = viewModelAdapter
@@ -69,6 +71,6 @@ constructor() // Required empty public constructor
                 }
             }
         }
-        return binding?.root
+        return binding.root
     }
 }
