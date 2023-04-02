@@ -36,41 +36,43 @@ constructor() // Required empty public constructor
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        if (_binding == null) {
+        val viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
 
-            val viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
+        _binding = FragmentMainBinding.inflate(inflater, container, false).apply {
+            setVariable(BR.vm, viewModel)
+            // Set the lifecycleOwner so DataBinding can observe LiveData
+            lifecycleOwner = viewLifecycleOwner
+        }
 
-            _binding = FragmentMainBinding.inflate(inflater, container, false).apply {
-                setVariable(BR.vm, viewModel)
-                // Set the lifecycleOwner so DataBinding can observe LiveData
-                lifecycleOwner = viewLifecycleOwner
+        viewModel.liveData.observe(viewLifecycleOwner, Observer { resource ->
+            if (resource is Resource.Success) {
+                viewModelAdapter.submitList(resource.data)
             }
+        })
 
-            viewModel.liveData.observe(viewLifecycleOwner, Observer { resource ->
-                if (resource is Resource.Success) {
-                    viewModelAdapter.submitList(resource.data)
+        viewModelAdapter =
+            MainAdapter(MainAdapter.OnClickListener { pokemon ->
+                val destination = MainFragmentDirections.actionMainFragmentToDetailFragment(pokemon)
+                with(findNavController()) {
+                    currentDestination?.getAction(destination.actionId)?.let { navigate(destination) }
                 }
             })
 
-            viewModelAdapter =
-                MainAdapter(MainAdapter.OnClickListener { pokemon ->
-                    val destination = MainFragmentDirections.actionMainFragmentToDetailFragment(pokemon)
-                    with(findNavController()) {
-                        currentDestination?.getAction(destination.actionId)?.let { navigate(destination) }
-                    }
-                })
+        with(binding) {
 
-            with(binding) {
+            recyclerview.apply {
+                adapter = viewModelAdapter
+            }
 
-                recyclerview.apply {
-                    adapter = viewModelAdapter
-                }
-
-                (activity as AppCompatActivity).setupActionBar(toolbar) {
-                    setTitle(R.string.title_fragment_main)
-                }
+            (activity as AppCompatActivity).setupActionBar(toolbar) {
+                setTitle(R.string.title_fragment_main)
             }
         }
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

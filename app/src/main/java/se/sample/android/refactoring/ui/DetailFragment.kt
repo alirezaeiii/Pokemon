@@ -28,10 +28,13 @@ constructor() // Required empty public constructor
     @Inject
     lateinit var pokemon: Pokemon
 
+    private var _binding: FragmentDetailBinding? = null
+
+    private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-
         val viewModel = ViewModelProvider(this, factory).get(DetailViewModel::class.java)
 
         val binding = FragmentDetailBinding.inflate(inflater, container, false).apply {
@@ -57,5 +60,10 @@ constructor() // Required empty public constructor
         }
 
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
