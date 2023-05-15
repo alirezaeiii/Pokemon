@@ -10,9 +10,9 @@ import se.sample.android.refactoring.util.Resource
 import se.sample.android.refactoring.util.schedulars.BaseSchedulerProvider
 import timber.log.Timber
 
-abstract class BaseViewModel<T, R>(
+abstract class BaseViewModel<T>(
     private val schedulerProvider: BaseSchedulerProvider,
-    private val requestSingle: Single<R>
+    private val requestSingle: Single<T>
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -20,8 +20,6 @@ abstract class BaseViewModel<T, R>(
     private val _liveData = MutableLiveData<Resource<T>>()
     val liveData: LiveData<Resource<T>>
         get() = _liveData
-
-    protected abstract fun getSuccessResult(it: R): T
 
     init {
         sendRequest()
@@ -31,7 +29,7 @@ abstract class BaseViewModel<T, R>(
         _liveData.value = Resource.Loading()
         composeSingle { requestSingle }
             .subscribe({
-                _liveData.postValue(Resource.Success(getSuccessResult(it)))
+                _liveData.postValue(Resource.Success(it))
             }) {
                 _liveData.postValue(Resource.Failure(it.localizedMessage))
                 Timber.e(it)

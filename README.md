@@ -2,7 +2,7 @@
 A sample to showcase Kotlin, MVVM, Navigation, Dagger, RxJava, Retrofit, DataBinding, Espresso and Unit test.
 
 ## Features
-* MVVM Architecture.
+* MVVM Architecture + Repository design Pattern.
 * Jetpack Libraries and Architecture Components.
 
 ## Testing

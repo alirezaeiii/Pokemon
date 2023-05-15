@@ -1,4 +1,4 @@
-package se.sample.android.refactoring
+package se.sample.android.refactoring.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.reactivex.Single
@@ -14,11 +14,14 @@ import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
-import se.sample.android.refactoring.network.*
+import se.sample.android.refactoring.domain.DetailWrapper
+import se.sample.android.refactoring.domain.repository.DetailRepository
+import se.sample.android.refactoring.network.NamedResponseModel
+import se.sample.android.refactoring.network.PokemonDetailsResponse
+import se.sample.android.refactoring.network.PokemonSpritesModel
 import se.sample.android.refactoring.util.Resource
 import se.sample.android.refactoring.util.schedulars.BaseSchedulerProvider
 import se.sample.android.refactoring.util.schedulars.ImmediateSchedulerProvider
-import se.sample.android.refactoring.viewmodels.DetailViewModel
 
 class DetailViewModelTest {
 
@@ -26,12 +29,11 @@ class DetailViewModelTest {
     var rule: TestRule = InstantTaskExecutorRule()
 
     @Mock
-    private lateinit var api: PokemonService
+    private lateinit var repository: DetailRepository
 
     private lateinit var schedulerProvider: BaseSchedulerProvider
 
-    private lateinit var pokemonSpecies: PokemonSpeciesResponse
-    private lateinit var pokemonDetailsResponse: PokemonDetailsResponse
+    private lateinit var detailWrapper: DetailWrapper
 
     @Before
     fun setUp() {
@@ -40,27 +42,20 @@ class DetailViewModelTest {
         // Make the sure that all schedulers are immediate.
         schedulerProvider = ImmediateSchedulerProvider()
 
-        pokemonDetailsResponse = PokemonDetailsResponse(
-            1, "pokemon", 10, 225,
-            NamedResponseModel("pokemon", "https://pokeapi.co/api/v2/pokemon/1"),
-            listOf(PokemonTypeModel(1, NamedResponseModel("name", "url"))),
-            PokemonSpritesModel("", "")
-        )
-        pokemonSpecies = PokemonSpeciesResponse(
-            1, "Species", listOf(
-                GenusResponseModel(
-                    "genus", NamedResponseModel("en", "url")
-                )
-            )
+        detailWrapper = DetailWrapper(
+            PokemonDetailsResponse(
+                1, "pokemon", 10, 225, NamedResponseModel(
+                    "", ""
+                ), emptyList(), PokemonSpritesModel("", "")
+            ), "", "genus"
         )
     }
 
     @Test
     fun loadPokemonDetails() {
-        `when`(api.getPokemonDetails(anyInt())).thenReturn(Single.just(pokemonDetailsResponse))
-        `when`(api.getPokemonSpecies(anyInt())).thenReturn(Single.just(pokemonSpecies))
+        `when`(repository.getDetails(anyInt())).thenReturn(Single.just(detailWrapper))
 
-        val viewModel = DetailViewModel(api, schedulerProvider, anyInt())
+        val viewModel = DetailViewModel(repository, schedulerProvider, anyInt())
 
         with(viewModel.liveData.value) {
             assertThat(this, `is`(notNullValue()))
@@ -76,11 +71,10 @@ class DetailViewModelTest {
 
     @Test
     fun errorLoadingPokemonDetails() {
-        val pokemonDetailsResponse = Single.error<PokemonDetailsResponse>(Exception("error"))
-        `when`(api.getPokemonDetails(anyInt())).thenReturn(pokemonDetailsResponse)
-        `when`(api.getPokemonSpecies(anyInt())).thenReturn(Single.just(pokemonSpecies))
+        val pokemonDetailsResponse = Single.error<DetailWrapper>(Exception("error"))
+        `when`(repository.getDetails(anyInt())).thenReturn(pokemonDetailsResponse)
 
-        val viewModel = DetailViewModel(api, schedulerProvider, anyInt())
+        val viewModel = DetailViewModel(repository, schedulerProvider, anyInt())
 
         with(viewModel.liveData.value) {
             assertThat(this, `is`(notNullValue()))

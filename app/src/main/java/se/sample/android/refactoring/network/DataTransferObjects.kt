@@ -3,8 +3,8 @@ package se.sample.android.refactoring.network
 import com.squareup.moshi.Json
 import org.apache.commons.lang3.StringUtils
 import se.sample.android.refactoring.domain.Pokemon
+import se.sample.android.refactoring.repository.MainRepositoryImpl.Companion.LIMIT
 import se.sample.android.refactoring.util.nextInt
-import se.sample.android.refactoring.viewmodels.MainViewModel.Companion.LIMIT
 import java.util.*
 import kotlin.collections.ArrayList
 

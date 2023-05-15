@@ -4,8 +4,8 @@ buildscript {
     ext {
         //Android
         minSdkVersion = 16
-        targetSdkVersion = 29
-        compileSdkVersion = 29
+        targetSdkVersion = 33
+        compileSdkVersion = 33
 
         //Libraries
         version_gradle = '4.0.1'

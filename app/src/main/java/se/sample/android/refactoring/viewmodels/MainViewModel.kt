@@ -2,10 +2,8 @@ package se.sample.android.refactoring.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import se.sample.android.refactoring.domain.repository.MainRepository
 import se.sample.android.refactoring.domain.Pokemon
-import se.sample.android.refactoring.network.NamedResponseModel
-import se.sample.android.refactoring.network.PokemonService
-import se.sample.android.refactoring.network.asDomainModel
 import se.sample.android.refactoring.util.schedulars.BaseSchedulerProvider
 import javax.inject.Inject
 
@@ -16,30 +14,24 @@ import javax.inject.Inject
  * results after the new Fragment or Activity is available.
  */
 class MainViewModel(
-    api: PokemonService,
+    repository: MainRepository,
     schedulerProvider: BaseSchedulerProvider
-) : BaseViewModel<List<Pokemon>, List<NamedResponseModel>>(schedulerProvider,
-    api.getPokemonList(LIMIT).map { it.results }) {
-
-    override fun getSuccessResult(it: List<NamedResponseModel>): List<Pokemon> = it.asDomainModel()
+) : BaseViewModel<List<Pokemon>>(schedulerProvider,
+    repository.getPokemonList()) {
 
     /**
      * Factory for constructing MainViewModel with parameter
      */
     class Factory @Inject constructor(
-        private val api: PokemonService,
+        private val repository: MainRepository,
         private val schedulerProvider: BaseSchedulerProvider
     ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return MainViewModel(api, schedulerProvider) as T
+                return MainViewModel(repository, schedulerProvider) as T
             }
             throw IllegalArgumentException("Unable to construct ViewModel")
         }
-    }
-
-    companion object {
-        const val LIMIT = 151
     }
 }

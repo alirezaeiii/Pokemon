@@ -1,4 +1,4 @@
-package se.sample.android.refactoring
+package se.sample.android.refactoring.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.reactivex.Single
@@ -10,17 +10,14 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
-import se.sample.android.refactoring.network.NamedResponseModel
-import se.sample.android.refactoring.network.PokemonListResponse
-import se.sample.android.refactoring.network.PokemonService
+import se.sample.android.refactoring.domain.Pokemon
+import se.sample.android.refactoring.domain.repository.MainRepository
 import se.sample.android.refactoring.util.Resource
 import se.sample.android.refactoring.util.schedulars.BaseSchedulerProvider
 import se.sample.android.refactoring.util.schedulars.ImmediateSchedulerProvider
-import se.sample.android.refactoring.viewmodels.MainViewModel
 
 class MainViewModelTest {
 
@@ -28,7 +25,7 @@ class MainViewModelTest {
     var rule: TestRule = InstantTaskExecutorRule()
 
     @Mock
-    private lateinit var api: PokemonService
+    private lateinit var repository: MainRepository
 
     private lateinit var schedulerProvider: BaseSchedulerProvider
 
@@ -42,29 +39,24 @@ class MainViewModelTest {
 
     @Test
     fun loadPokemon() {
-        val pokemonListResponse = PokemonListResponse(
-            1, "next", null,
-            listOf(NamedResponseModel("pokemon", "https://pokeapi.co/api/v2/pokemon/1/"))
-        )
-        `when`(api.getPokemonList(anyInt())).thenReturn(Single.just(pokemonListResponse))
+        `when`(repository.getPokemonList()).thenReturn(Single.just(emptyList()))
 
-        val viewModel = MainViewModel(api, schedulerProvider)
+        val viewModel = MainViewModel(repository, schedulerProvider)
 
         viewModel.liveData.value.let {
             assertThat(it, `is`(notNullValue()))
             if (it is Resource.Success) {
-                it.data?.let { data -> assertTrue(data.isNotEmpty()) }
-                assertThat(it.data?.size, `is`(1))
+                it.data?.let { data -> assertTrue(data.isEmpty()) }
             }
         }
     }
 
     @Test
     fun errorLoadingPokemon() {
-        val observableResponse = Single.error<PokemonListResponse>(Exception("error"))
-        `when`(api.getPokemonList(anyInt())).thenReturn(observableResponse)
+        val observableResponse = Single.error<List<Pokemon>>(Exception("error"))
+        `when`(repository.getPokemonList()).thenReturn(observableResponse)
 
-        val viewModel = MainViewModel(api, schedulerProvider)
+        val viewModel = MainViewModel(repository, schedulerProvider)
 
         viewModel.liveData.value.let {
             assertThat(it, `is`(notNullValue()))
